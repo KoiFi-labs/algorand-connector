@@ -1,0 +1,23 @@
+{
+    "validTrue":[
+        {   
+            "description":"Happy path",
+            "dependencies":{
+                "dep1":"validTrue",
+                "dep2":"validTrue",
+                "dep3":"validTrue"
+            }
+        }
+    ],
+    "errored":[
+        {   
+            "description":"should throw if case fails",
+            "dependencies":{
+                "dep1":"errored",
+                "dep2":"validTrue",
+                "dep3":"validTrue"
+            },
+            "throws":"SomeError"
+        }
+    ]
+}

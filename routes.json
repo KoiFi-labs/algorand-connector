@@ -1,0 +1,10 @@
+{
+    "routes":[
+        {"path":"/app", "verb":"POST","uoc":"createAppUOC"},
+        {"path":"/app", "verb":"DELETE","uoc":"deleteAppUOC"},
+        {"path":"/app/optin", "verb":"POST","uoc":"optinUOC"},
+        {"path":"/app/closeout", "verb":"POST","uoc":"closeOutUOC"},
+        {"path":"/transaction", "verb":"POST","uoc":"commitTransactionUOC"},
+        {"path":"/app/call", "verb":"POST","uoc":"appCallUOC"}
+    ]
+}
