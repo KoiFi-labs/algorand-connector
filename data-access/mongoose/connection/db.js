@@ -42,8 +42,13 @@ module.exports = (configuration) => {
             connectionString = configuration.replicas.map(buildConnectionString).join(",")+`/${configuration.dbname}?replicaSet=${configuration.replicaName}`
     
         }else{
-            console.log(`Single db connection detected`)
-            connectionString = buildConnectionString(configuration)+`/${configuration.dbname}`
+            if(configuration.uri){
+                console.log(`Uri db connection detected`)
+                connectionString = configuration.uri
+            }else{
+                console.log(`Single db connection detected`)
+                connectionString = 'mongodb://'+buildConnectionString(configuration)+`/${configuration.dbname}`
+            }
         }
         mongoose.connect(`mongodb://${connectionString}`,{ useNewUrlParser: true, useUnifiedTopology: true });
     
