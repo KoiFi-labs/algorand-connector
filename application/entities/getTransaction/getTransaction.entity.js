@@ -3,7 +3,7 @@ const { GetTransactionError } = require("./errors");
 exports.getTransaction = ({getTransaction}) => async (params) => {
     try{
         let transaction = await getTransaction(params)
-        if (transaction !== undefined) {
+        if (transaction) {
             if (
               transaction['confirmed-round'] !== null &&
               transaction['confirmed-round'] > 0

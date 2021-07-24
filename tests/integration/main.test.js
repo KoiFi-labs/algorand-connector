@@ -113,4 +113,16 @@ describe("In an integrated system", () => {
 
 
     }, 50000);
+
+    
+    test("system should allow to access deployed contract methods with parametrized foreign apps", async () => {
+        
+        let rbacApp = await helpers.deployApp(application, helpers.walletContract, helpers.wallets[0],["start"])
+        await helpers.optinApp(application, rbacApp, helpers.wallets[1])
+        await helpers.callApp(application, rbacApp, ["add", helpers.wallets[1].address], helpers.wallets[0])
+        
+        let mintApp = await helpers.deployApp(application, helpers.mintingContract, helpers.wallets[0],["start", rbacApp])
+        await helpers.callApp(application, mintApp, ["mint", 10, helpers.wallets[1].address], helpers.wallets[0], [rbacApp])
+
+    }, 50000);
 })

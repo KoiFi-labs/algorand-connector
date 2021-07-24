@@ -8,5 +8,9 @@ module.exports = {
     mongoose:{
         uri:process.env['MONGO_URI'] ,host:process.env['MONGO_URL'], port:process.env['MONGO_PORT'], dbname:process.env['MONGO_DB_NAME']
     },
-    port: process.env['HTTP_PORT']
+    port: process.env['HTTP_PORT'],
+    txExpirationSeconds: process.env['TX_EXPIRATION'],
+    notifications:{
+        url: process.env['NOTIFICATIONS_URL']
+    }
 }

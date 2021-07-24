@@ -1,17 +1,11 @@
 const mongoose = require('mongoose')
 var TransactionSchema = new mongoose.Schema({
-	nonce: Number,
-    gasLimit: Number,
-    gasPrice: Number,
-    data: String,
-    callback: String ,
-    receipt: {},
-    hash:{type: String, unique: true} ,
+    txId:{type: String, unique: true} ,
     signedTransaction:String ,
     error:{},
-    abi:[],
+    receipt:{},
     status: String,
-    bytecode: String
+    callback: String
 },{timestamps:{}})
 
 

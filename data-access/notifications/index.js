@@ -22,6 +22,6 @@ const sendCallback = ({url}) => async ({callback, status}) => {
     }
 
 }
-module.exports = configurations => ({
-    sendCallback: sendCallback(configurations),
+module.exports = ({notifications}) => ({
+    sendCallback: sendCallback(notifications),
 })

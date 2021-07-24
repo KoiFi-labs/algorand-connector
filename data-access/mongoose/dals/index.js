@@ -3,18 +3,18 @@ const persistTransaction = ({transactionModel}) => async ({transaction}) => {
     let tx = await transactionModel.create(transaction)
     tx = tx.toObject()
     delete tx._id
-    tx.id = tx.hash
+    tx.id = tx.txId
     return tx
 }
 
-const fetchTransaction = ({transactionModel}) => async ({hash}) => {
-    let tx = await transactionModel.findOne({hash})
+const fetchTransaction = ({transactionModel}) => async ({txId}) => {
+    let tx = await transactionModel.findOne({txId})
     return tx?tx.toObject():null
 }
 
 const updateTransactions = ({transactionModel}) => async ({transactionList}) => {
     await Promise.all(transactionList.map(async tx => {
-        return transactionModel.updateOne({hash:tx.hash},{$set:{receipt:tx.receipt, status:tx.status}})
+        return transactionModel.updateOne({txId:tx.txId},{$set:{status:tx.status}})
     }))
 }
 const fetchNewestDoneTransaction = ({transactionModel}) => async ({}) => {
@@ -26,8 +26,8 @@ const fetchNewestDoneTransaction = ({transactionModel}) => async ({}) => {
     }
 }
 
-const getPendingTransactions = ({transactionModel}) => async ({hashes}) =>{
-    return transactionModel.find({hash:{$in:hashes}})
+const getPendingTransactions = ({transactionModel}) => async ({ids}) =>{
+    return transactionModel.find({txId:{$in:ids}, status:'pending'})
 }
 
 const fetchOldestPendingTransaction = ({transactionModel}) => async ({hashes}) =>{

@@ -19,7 +19,10 @@ function extractParams(req){
 
 const errorHandler = (mapper) => async (error, req, res, next) => {
   let {status, data} = mapper.present(error)
-  console.log(`Error in endpoint ${req.method} ${req.originalUrl} : ${status}`)
+  console.log(`Error in endpoint ${req.method} ${req.originalUrl} : ${status}`,
+  error.code,
+  error.details?error.details.code?error.details.code:error.details:error,
+  error.details?error.details.details?error.details.details.code?error.details.details.code:error.details.details:error.details:error)
   res.status(status).json(data);
 }
 
@@ -44,7 +47,7 @@ module.exports = (routes = [], responseMapper, errorMapper, port, middlewares=[]
   routes.map(addPrefixToPaths(prefix)).forEach(({path, verb, uoc})=>{
     expressApp[verb.toLowerCase()](path,[...middlewares, endpoint(uoc),responseHandler(responseMapper), errorHandler(errorMapper)])
   })
-
+  
   let server = expressApp.listen(port)
   console.log(`express running on port ${port}`)
   return server

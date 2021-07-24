@@ -39,13 +39,31 @@ exports.deployApp = async function (application, contract, creatorAccount, param
 
 exports.optinApp = async function(application, appId, from){
     let transaction = await application.optinUOC({appId, from: from.address})
+    let signedTransaction = exports.sign(transaction, from)
+    let commitedTransaction = await application.commitTransactionUOC(signedTransaction)
+    
+    let tx = await application.getTransactionUOC({txId: commitedTransaction.txId})
+    while(tx.status!=="done"){
+        //await application.checkBlockchainProgressUOC({})
+        tx = await application.getTransactionUOC({txId: commitedTransaction.txId})
+        
+    }
+}
+
+exports.callApp = async function(application, appId, parameters, from, foreignApps){
+    try {
+        let transaction = await application.appCallUOC({appId, parameters, from: from.address, foreignApps})
         let signedTransaction = exports.sign(transaction, from)
         let commitedTransaction = await application.commitTransactionUOC(signedTransaction)
         
-        let tx = await application.getTransactionUOC({txId: commitedTransaction.txId})
+        tx = await application.getTransactionUOC({txId: commitedTransaction.txId})
         while(tx.status!=="done"){
             //await application.checkBlockchainProgressUOC({})
             tx = await application.getTransactionUOC({txId: commitedTransaction.txId})
             
         }
+    } catch (error) {
+        throw error
+    }
+
 }
