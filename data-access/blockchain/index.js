@@ -52,12 +52,13 @@ const appCall = ({algodClient}) => async ({from, appId, parameters, accounts, fo
       );
       return algosdk.encodeUnsignedTransaction( txn )
 }
-const optin = ({algodClient}) => async ({from, appId, txnParams}) => {
+const optin = ({algodClient}) => async ({from, appId, txnParams, parameters}) => {
     const suggestedParams = Object.assign(await algodClient.getTransactionParams().do(), txnParams);
+    const args = parameters.map(param => algosdk.encodeObj(param))
     const txn = algosdk.makeApplicationOptInTxn(
         from,
         suggestedParams,
-        appId
+        appId,args
       );
       return algosdk.encodeUnsignedTransaction( txn )
 }
