@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: Basic Service Documentation
+  description: Open Api documentation template
+  version: 1.0.0
+
+servers:
+  - url: http://127.0.0.1:3000
+    description: local development
+    
+paths:
+  /app:
+    post:
+      security:
+        - accessToken: []
+      requestBody:
+        $ref: '#/components/requestBodies/DefaultRequestBody'
+      responses:
+        200:
+          $ref: '#/components/responses/OkResponse'
+        500:
+          $ref: '#/components/responses/UnhandledErrorResponse'
+    delete:
+      security:
+        - accessToken: []
+      responses:
+        200:
+          $ref: '#/components/responses/OkResponse'
+        500:
+          $ref: '#/components/responses/UnhandledErrorResponse'
+  /app/call:
+    post:
+      security:
+        - accessToken: []
+      requestBody:
+        $ref: '#/components/requestBodies/DefaultRequestBody'
+      responses:
+        200:
+          $ref: '#/components/responses/OkResponse'
+        500:
+          $ref: '#/components/responses/UnhandledErrorResponse'
+  /app/closeout:
+    post:
+      security:
+        - accessToken: []
+      requestBody:
+        $ref: '#/components/requestBodies/DefaultRequestBody'
+      responses:
+        200:
+          $ref: '#/components/responses/OkResponse'
+        500:
+          $ref: '#/components/responses/UnhandledErrorResponse'
+  /app/optin:
+    post:
+      security:
+        - accessToken: []
+      requestBody:
+        $ref: '#/components/requestBodies/DefaultRequestBody'
+      responses:
+        200:
+          $ref: '#/components/responses/OkResponse'
+        500:
+          $ref: '#/components/responses/UnhandledErrorResponse'
+  /transaction:
+    post:
+      security:
+        - accessToken: []
+      requestBody:
+        $ref: '#/components/requestBodies/DefaultRequestBody'
+      responses:
+        200:
+          $ref: '#/components/responses/OkResponse'
+        500:
+          $ref: '#/components/responses/UnhandledErrorResponse'
+
+components:
+    securitySchemes:
+        accessToken:
+            type: apiKey
+            in: header 
+            name: Authorization
+
+    requestBodies:
+        DefaultRequestBody:
+            description: Default request body
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/DefaultSchema' 
+        DefaultMultipartRequestBody:
+            description: Default multipart request body
+            content:
+                multipart/form-data:
+                    schema:
+                        $ref: '#/components/schemas/DefaultMultipartSchema'
+        
+    responses:
+        OkResponse:
+            description: Ok
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            result:
+                                type: string
+                                example: ok
+        UnhandledErrorResponse:
+            description: Non expected error
+    schemas: 
+        DefaultSchema:
+            type: object
+            properties:
+                status:
+                    type: string
+                    example: ok
+        DefaultMultipartSchema:
+            type: object
+            properties:
+                file:
+                    type: string
+                    format: binary

@@ -1,0 +1,1 @@
+module.exports = dependencies => uoc => parameters => uoc(parameters)
