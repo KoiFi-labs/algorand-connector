@@ -21,19 +21,17 @@ exports.getNewMinedTransactions = ({fetchOldestPendingTransaction, getBlockTrans
         let blockTransactions = []
         let transactions = []
         let initialBlockNumber = blockNumber
-        do{
-            
-            blockTransactions = await getBlockTransactions({blockNumber})
-            if(blockTransactions.length){
-                let pendingTransactions = await getPendingTransactions({ids: blockTransactions.map(t=>t.id)})
-                transactions.push(...await Promise.all(pendingTransactions.map(async pt=>{
-                    pt.receipt = blockTransactions.find(tx => tx.id === pt.txId)
-                    pt.status = 'done'
-                    return pt
-                })))
-            }
-            blockNumber+=1
-        } while(blockNumber <= currentBlockNumber)
+        
+        blockTransactions = await getBlockTransactions({blockNumber})
+        if(blockTransactions.length){
+            let pendingTransactions = await getPendingTransactions({ids: blockTransactions.map(t=>t.id)})
+            transactions.push(...await Promise.all(pendingTransactions.map(async pt=>{
+                pt.receipt = blockTransactions.find(tx => tx.id === pt.txId)
+                pt.status = 'done'
+                return pt
+            })))
+        }
+        
         console.log("Pending transactions search: ",initialBlockNumber, 'to',blockNumber -1 , `rounds analyzed. ${transactions.length?transactions.length+' tx passed from pending to done':''}`)
         return transactions
     }catch(error){

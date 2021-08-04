@@ -138,11 +138,11 @@ const getCurrentBlockNumber = ({algodClient}) => async ({}) => {
     return res['last-round'] - 1
 }
 module.exports = ({blockchain}) => {
-    let {token, server, port, indexerServer, indexerPort} = blockchain
+    let {token, server, port, indexerServer, indexerPort, apikey} = blockchain
     port = port?port:''
     indexerPort = indexerPort?indexerPort:''
-    let algodClient = new algosdk.Algodv2(token, server, port);
-    let indexer =  new algosdk.Indexer(token, indexerServer, indexerPort);
+    let algodClient = new algosdk.Algodv2(token?token:apikey, server, port);
+    let indexer =  new algosdk.Indexer(token?token:apikey, indexerServer, indexerPort);
     (async ()=>{ await algodClient.healthCheck().do();console.log("Connected to algorand node")})()
     const deps = {indexer, algodClient}
     return {
