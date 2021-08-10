@@ -15,4 +15,4 @@ RUN chown -R node:node .
 USER node
 
 # Run app
-CMD [ "npm", "start" ]
+CMD [ "node", "index.js" ]
