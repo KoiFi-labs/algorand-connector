@@ -35,22 +35,21 @@ mongoose.connection.on('error', function (err) {
 
 
 module.exports = (configuration) => {
-        let connectionString = ''
-        if(configuration.replicas){
-            console.log(`${configuration.replicas.length} replicas detected`)
-            if(!configuration.replicaName) throw new Error("Missing replicaSet name parametrization")
-            connectionString = configuration.replicas.map(buildConnectionString).join(",")+`/${configuration.dbname}?replicaSet=${configuration.replicaName}`
-    
+    let connectionString = ''
+    if(configuration.replicas){
+        console.log(`${configuration.replicas.length} replicas detected`)
+        if(!configuration.replicaName) throw new Error("Missing replicaSet name parametrization")
+        connectionString = configuration.replicas.map(buildConnectionString).join(",")+`/${configuration.dbname}?replicaSet=${configuration.replicaName}`
+    }else{
+        if(configuration.uri){
+            console.log(`Uri db connection detected`)
+            connectionString = configuration.uri
         }else{
-            if(configuration.uri){
-                console.log(`Uri db connection detected`)
-                connectionString = configuration.uri
-            }else{
-                console.log(`Single db connection detected`)
-                connectionString = 'mongodb://'+buildConnectionString(configuration)+`/${configuration.dbname}`
-            }
+            console.log(`Single db connection detected`)
+            connectionString = 'mongodb://'+buildConnectionString(configuration)+`/${configuration.dbname}`
         }
-        mongoose.connect(`mongodb://${connectionString}`,{ useNewUrlParser: true, useUnifiedTopology: true });
+    }
+    mongoose.connect(connectionString,{ useNewUrlParser: true, useUnifiedTopology: true });
     
 }
 
