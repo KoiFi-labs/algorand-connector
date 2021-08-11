@@ -31,6 +31,13 @@ paths:
     get:
       security:
         - accessToken: []
+      parameters:
+      - in: query
+        required: true
+        schema:
+          type: string
+        name: appId
+        
       responses:
         200:
           $ref: '#/components/responses/OkResponse'
