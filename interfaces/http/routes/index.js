@@ -1,4 +1,5 @@
 module.exports = (deps) => ([
+    {"path":"/app", "verb":"GET","uoc":deps.getAppUOC},
     {"path":"/app", "verb":"POST","uoc":deps.createAppUOC},
     {"path":"/app", "verb":"DELETE","uoc":deps.deleteAppUOC},
     {"path":"/app/optin", "verb":"POST","uoc":deps.optinUOC},

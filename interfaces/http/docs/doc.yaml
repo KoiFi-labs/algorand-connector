@@ -28,6 +28,15 @@ paths:
           $ref: '#/components/responses/OkResponse'
         500:
           $ref: '#/components/responses/UnhandledErrorResponse'
+    get:
+      security:
+        - accessToken: []
+      responses:
+        200:
+          $ref: '#/components/responses/OkResponse'
+        500:
+          $ref: '#/components/responses/UnhandledErrorResponse'
+
   /app/call:
     post:
       security:

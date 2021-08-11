@@ -8,6 +8,7 @@ const createAppEntity = require('./createApp')
 const createFeeTransactionEntity = require('./createFeeTransaction')
 const deleteAppEntity = require('./deleteApp')
 const getAccountEntity = require('./getAccount')
+const getAppEntity = require('./getApp')
 const getNewMinedTransactionsEntity = require('./getNewMinedTransactions')
 const getTimeErroredTransactionsEntity = require('./getTimeErroredTransactions')
 const getTransactionEntity = require('./getTransaction')
@@ -26,6 +27,7 @@ module.exports = (dependencies) => ({
 	createFeeTransaction: createFeeTransactionEntity(dependencies),
 	deleteApp: deleteAppEntity(dependencies),
 	getAccount: getAccountEntity(dependencies),
+	getApp: getAppEntity(dependencies),
 	getNewMinedTransactions: getNewMinedTransactionsEntity(dependencies),
 	getTimeErroredTransactions: getTimeErroredTransactionsEntity(dependencies),
 	getTransaction: getTransactionEntity(dependencies),

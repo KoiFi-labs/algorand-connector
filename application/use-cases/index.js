@@ -9,6 +9,7 @@ const createAppUOC = require('./createApp')
 const createFeeTransactionUOC = require('./createFeeTransaction')
 const deleteAppUOC = require('./deleteApp')
 const getAccountUOC = require('./getAccount')
+const getAppUOC = require('./getApp')
 const getTransactionUOC = require('./getTransaction')
 const optinUOC = require('./optin')
 
@@ -24,6 +25,7 @@ module.exports = (dependencies) => ({
 	createFeeTransactionUOC: createFeeTransactionUOC(dependencies),
 	deleteAppUOC: deleteAppUOC(dependencies),
 	getAccountUOC: getAccountUOC(dependencies),
+	getAppUOC: getAppUOC(dependencies),
 	getTransactionUOC: getTransactionUOC(dependencies),
 	optinUOC: optinUOC(dependencies),
 

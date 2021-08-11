@@ -137,6 +137,10 @@ const getCurrentBlockNumber = ({algodClient}) => async ({}) => {
     let res = await algodClient.status().do()
     return res['last-round'] - 1
 }
+
+const getApp = ({indexer}) => async ({appId}) => {
+    return indexer.lookupApplications( appId ).do()
+}
 module.exports = ({blockchain}) => {
     let {token, server, port, indexerServer, indexerPort, apikey} = blockchain
     port = port?port:''
@@ -160,5 +164,6 @@ module.exports = ({blockchain}) => {
         getFeePerTransaction: getFeePerTransaction(deps),
         combineTransactions: combineTransactions(deps),
         getCurrentBlockNumber: getCurrentBlockNumber(deps)
+        getApp: getApp(deps)
     }
 }
