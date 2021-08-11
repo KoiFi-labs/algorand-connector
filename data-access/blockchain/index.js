@@ -163,7 +163,7 @@ module.exports = ({blockchain}) => {
         transferAlgos: transferAlgos(deps),
         getFeePerTransaction: getFeePerTransaction(deps),
         combineTransactions: combineTransactions(deps),
-        getCurrentBlockNumber: getCurrentBlockNumber(deps)
+        getCurrentBlockNumber: getCurrentBlockNumber(deps),
         getApp: getApp(deps)
     }
 }
