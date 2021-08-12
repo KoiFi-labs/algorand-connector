@@ -2,7 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 
 
-const sendCallback = ({url}) => async ({callback, status}) => {
+const sendCallback = ({url}) => async ({callback, status, receipt}) => {
     try {
         var config = {
             method: 'POST',
@@ -13,7 +13,9 @@ const sendCallback = ({url}) => async ({callback, status}) => {
             },
             data: { 
                 type: 'callback',
-                url: callback.includes('?')?callback+'&status='+status:callback+'?status='+status
+                verb:'post',
+                url: callback.includes('?')?callback+'&status='+status:callback+'?status='+status,
+                body: receipt
             }
         };
         await axios(config)
