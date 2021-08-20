@@ -30,7 +30,7 @@ const createApp = ({algodClient}) => async ({approvalCode, clearStateCode, numGl
     const clearProgram = await getBasicProgramBytes(algodClient, clearStateCode);
     
     const suggestedParams = Object.assign(await algodClient.getTransactionParams().do(), txnParams);
-    const args = parameters.map(param => algosdk.encodeObj(param))
+    const args = parameters.map(param => Number.isInteger(param)?algosdk.encodeUint64(param):algosdk.encodeObj(param))
     // create the application creation transaction
     const txn = algosdk.makeApplicationCreateTxn(from, suggestedParams, onComplete, approvalProgram, clearProgram, numLocalInts, numLocalByteSlices, numGlobalInts, numGlobalByteSlices, args);
     txn.fee = txnParams?txnParams.fee?txnParams.fee:txn.fee:txn.fee
@@ -42,6 +42,7 @@ const commitTransaction = ({algodClient}) => async  ({list, blob}) => {
 const appCall = ({algodClient}) => async ({from, appId, parameters, accounts, foreignApps, txnParams}) => {
     const suggestedParams = Object.assign(await algodClient.getTransactionParams().do(), txnParams);
     const args = parameters.map(param => Number.isInteger(param)?algosdk.encodeUint64(param):algosdk.encodeObj(param))
+    foreignApps = foreignApps.map(algosdk.encodeUint64)
     const txn = algosdk.makeApplicationNoOpTxn(
         from,
         suggestedParams,

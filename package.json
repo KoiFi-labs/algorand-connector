@@ -20,7 +20,7 @@
     "jest": "^27.0.6"
   },
   "dependencies": {
-    "algosdk": "^1.10.0",
+    "algosdk": "^1.11.1",
     "axios": "^0.21.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
