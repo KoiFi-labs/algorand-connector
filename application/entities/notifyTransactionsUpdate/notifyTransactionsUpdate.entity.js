@@ -10,3 +10,4 @@ exports.notifyTransactionsUpdate = ({sendCallback}) => async ({transactionList})
     }
     
 }
+

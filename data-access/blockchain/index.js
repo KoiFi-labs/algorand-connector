@@ -41,7 +41,7 @@ const commitTransaction = ({algodClient}) => async  ({list, blob}) => {
 }
 const appCall = ({algodClient}) => async ({from, appId, parameters, accounts, foreignApps, txnParams}) => {
     const suggestedParams = Object.assign(await algodClient.getTransactionParams().do(), txnParams);
-    const args = parameters.map(param => algosdk.encodeObj(param))
+    const args = parameters.map(param => Number.isInteger(param)?algosdk.encodeUint64(param):algosdk.encodeObj(param))
     const txn = algosdk.makeApplicationNoOpTxn(
         from,
         suggestedParams,
