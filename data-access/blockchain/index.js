@@ -1,4 +1,5 @@
 const algosdk = require('algosdk');
+const TextEncoder = require("util").TextEncoder;
 const { OverspendError, LogicError, NumberOfAppsError, BelowMinBalanceError, TransactionAlreadyInLedgerError} = require('./errors');
 
 async function getBasicProgramBytes(client, stringTEALProgram) {
@@ -119,6 +120,10 @@ const getTransaction = ({indexer}) => async ({txId}) => {
 const transferAlgos = ({algodClient}) => async ({amount, fee=algosdk.ALGORAND_MIN_TX_FEE, senderAddress, receiverAddress, note}) => {
     let params = await algodClient.getTransactionParams().do();
     params.fee = fee
+    if (!!note && note.length < 1024) {
+        const enc = new TextEncoder();
+        note = enc.encode(note);
+    }
     const txn = algosdk.makePaymentTxnWithSuggestedParams(senderAddress, receiverAddress, amount, undefined, note, params);
     return algosdk.encodeUnsignedTransaction( txn )
 }
