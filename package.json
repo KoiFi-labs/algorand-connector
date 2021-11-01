@@ -1,0 +1,32 @@
+{
+  "name": "algorand-connector",
+  "version": "1.0.0",
+  "description": "Algorand connector",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:koibanx/modules/algorand-connector.git"
+  },
+  "keywords": [
+    "algorad",
+    "connector"
+  ],
+  "author": "Esteban Rey",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.0.6"
+  },
+  "dependencies": {
+    "algosdk": "^1.11.1",
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonschema": "^1.4.0",
+    "mongoose": "^5.13.2",
+    "node-cron": "^3.0.0"
+  }
+}
