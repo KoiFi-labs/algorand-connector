@@ -1,8 +1,8 @@
 const cron = require("node-cron");
 const timeOptions = {
     everyDayEarlyInTheMorning:"0 2 * * *",
-    every2Seconds:"*/2 * * * * *",
-    every5Seconds:"*/5 * * * * *"
+    every2Seconds:"*/2 * * * *",
+    every10Seconds:"*/10 * * * *"
 }
 
 
