@@ -2,12 +2,13 @@ const cron = require("node-cron");
 const timeOptions = {
     everyDayEarlyInTheMorning:"0 2 * * *",
     every2Seconds:"*/2 * * * *",
-    every10Seconds:"*/10 * * * *"
+    every15Seconds:"*/15 * * * * *"
 }
 
 
 logger = (f) => async () => {
     try {
+        console.log('cron')
         await f()
     } catch (error) {
         console.error(error)

@@ -1,3 +1,3 @@
 module.exports = ({timeOptions, uoc}) => ([
-    { time: timeOptions.every10Seconds, uoc: uoc.checkBlockchainProgressUOC }
+    { time: timeOptions.every15Seconds, uoc: uoc.checkBlockchainProgressUOC }
 ])
