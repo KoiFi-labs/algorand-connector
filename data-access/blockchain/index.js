@@ -1,5 +1,5 @@
 const algosdk = require('algosdk');
-const { OverspendError, LogicError, NumberOfAppsError, BelowMinBalanceError, TransactionAlreadyInLedgerError} = require('./errors');
+const { OverspendError, LogicError, NumberOfAppsError, BelowMinBalanceError, TransactionAlreadyInLedgerError, AlreadyOptedInError} = require('./errors');
 
 async function getBasicProgramBytes(client, stringTEALProgram) {
     const compiledProgram = await client.compile(stringTEALProgram).do();
@@ -10,12 +10,14 @@ async function getResult(result){
     try {
         return await result
     } catch (error) {
+        console.error(error)
         if(error.response && error.response.body && error.response.body.message){
             if(error.response.body.message.includes("overspend")) throw new OverspendError(error.response.body.message)
             if(error.response.body.message.includes("logic eval error")) throw new LogicError(error.response.body.message)
             if(error.response.body.message.includes("max created apps per acct")) throw new NumberOfAppsError(error.response.body.message)
             if(error.response.body.message.includes("below min")) throw new BelowMinBalanceError(error.response.body.message)
             if(error.response.body.message.includes("already in ledger")) throw new TransactionAlreadyInLedgerError(error.response.body.message)
+            if(error.response.body.message.includes("has already opted in to app")) throw new AlreadyOptedInError(error.response.body.message)
         }
         throw error.response?error.response.body?error.response.body.message:result:result
     }
@@ -38,6 +40,9 @@ const createApp = ({algodClient}) => async ({approvalCode, clearStateCode, numGl
 }
 const commitTransaction = ({algodClient}) => async  ({list, blob}) => {
     return await getResult(algodClient.sendRawTransaction(blob?new Uint8Array(blob):list.map(t=>new Uint8Array(t.blob))).do());
+}
+const createASA = ({algodClient}) => async ({from,total,decimals,assetName,unitName,assetURL,defaultFrozen,freeze,manager,clawback,reserve,suggestedParams}) => {
+    return algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({from,total,decimals,assetName,unitName,assetURL,defaultFrozen,freeze,manager,clawback,reserve,suggestedParams})
 }
 const appCall = ({algodClient}) => async ({from, appId, parameters, accounts, foreignApps, txnParams}) => {
     const suggestedParams = Object.assign(await algodClient.getTransactionParams().do(), txnParams);
@@ -142,6 +147,10 @@ const getCurrentBlockNumber = ({algodClient}) => async ({}) => {
 const getApp = ({indexer}) => async ({appId}) => {
     return indexer.lookupApplications( appId ).do()
 }
+
+const decodeMessagepack= ({}) => ({data:hex}) => {
+    return Buffer.from(hex,'base64').toString().slice(1)
+}
 module.exports = ({blockchain}) => {
     let {token, server, port, indexerServer, indexerPort, apikey} = blockchain
     port = port?port:''
@@ -165,6 +174,8 @@ module.exports = ({blockchain}) => {
         getFeePerTransaction: getFeePerTransaction(deps),
         combineTransactions: combineTransactions(deps),
         getCurrentBlockNumber: getCurrentBlockNumber(deps),
-        getApp: getApp(deps)
+        getApp: getApp(deps),
+        decodeMessagepack: decodeMessagepack(deps),
+        createASA: createASA(deps)
     }
 }

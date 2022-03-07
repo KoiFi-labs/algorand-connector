@@ -46,4 +46,14 @@ class TransactionAlreadyInLedgerError extends Error {
         Error.captureStackTrace(this, TransactionAlreadyInLedgerError)
     }
 }
-module.exports = {OverspendError, LogicError,NumberOfAppsError,BelowMinBalanceError,TransactionAlreadyInLedgerError}
+class AlreadyOptedInError extends Error {
+    constructor(details, ...args) {
+        super(...args)
+        this.code = "<AOI>"
+        this.message = "The account has already opted into the app"
+        this.details = details
+        Error.captureStackTrace(this, AlreadyOptedInError)
+    }
+}
+AlreadyOptedInError
+module.exports = {OverspendError, LogicError,NumberOfAppsError,BelowMinBalanceError,TransactionAlreadyInLedgerError, AlreadyOptedInError}
