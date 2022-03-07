@@ -116,10 +116,11 @@ const getTransaction = ({indexer}) => async ({txId}) => {
 
 };
 
-const transferAlgos = ({algodClient}) => async ({amount, fee=algosdk.ALGORAND_MIN_TX_FEE, senderAddress, receiverAddress}) => {
+const transferAlgos = ({algodClient}) => async ({amount, fee=algosdk.ALGORAND_MIN_TX_FEE, flatFee=false, senderAddress, receiverAddress}) => {
     let params = await algodClient.getTransactionParams().do();
     params.fee = fee
-    const txn = algosdk.makePaymentTxnWithSuggestedParams(senderAddress, receiverAddress, amount, undefined,undefined, params); 
+    params.flatFee = flatFee
+    const txn = algosdk.makePaymentTxnWithSuggestedParams(senderAddress, receiverAddress, amount, undefined,undefined, params);
     return algosdk.encodeUnsignedTransaction( txn )
 }
 
