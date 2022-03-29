@@ -41,8 +41,11 @@ const createApp = ({algodClient}) => async ({approvalCode, clearStateCode, numGl
 const commitTransaction = ({algodClient}) => async  ({list, blob}) => {
     return await getResult(algodClient.sendRawTransaction(blob?new Uint8Array(blob):list.map(t=>new Uint8Array(t.blob))).do());
 }
-const createASA = ({algodClient}) => async ({from,total,decimals,assetName,unitName,assetURL,defaultFrozen,freeze,manager,clawback,reserve,suggestedParams}) => {
-    return algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({from,total,decimals,assetName,unitName,assetURL,defaultFrozen,freeze,manager,clawback,reserve,suggestedParams})
+const createASA = ({algodClient}) => async ({from,total,decimals,assetName,unitName,assetURL,assetMetadataHash,defaultFrozen,freeze,manager,clawback,reserve,note}) => {
+    if(assetMetadataHash)assetMetadataHash = new Uint8Array(Buffer.from(assetMetadataHash,'base64'))
+    const suggestedParams = Object.assign(await algodClient.getTransactionParams().do(), {});
+    const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({from,total,decimals,assetName,unitName,assetURL,assetMetadataHash,defaultFrozen,freeze,manager,clawback,reserve,note,suggestedParams})
+    return algosdk.encodeUnsignedTransaction( txn )
 }
 const appCall = ({algodClient}) => async ({from, appId, parameters, accounts, foreignApps, txnParams}) => {
     const suggestedParams = Object.assign(await algodClient.getTransactionParams().do(), txnParams);
@@ -145,11 +148,35 @@ const getCurrentBlockNumber = ({algodClient}) => async ({}) => {
 }
 
 const getApp = ({indexer}) => async ({appId}) => {
-    return indexer.lookupApplications( appId ).do()
+   
+    let app = await indexer.lookupApplications( appId ).do()
+    if(app){
+        app.account = await algosdk.getApplicationAddress(Number(appId))
+    }
+    return app
 }
 
 const decodeMessagepack= ({}) => ({data:hex}) => {
     return Buffer.from(hex,'base64').toString().slice(1)
+}
+
+const transferASA = ({algodClient}) => async ({from, 
+    recipient, 
+    closeRemainderTo, 
+    revocationTarget,
+    amount, 
+    note, 
+    assetID}) => {
+
+    const suggestedParams = Object.assign(await algodClient.getTransactionParams().do(), {});
+    const txn = algosdk.makeAssetTransferTxnWithSuggestedParams(from, 
+        recipient, 
+        closeRemainderTo, 
+        revocationTarget,
+        amount,  
+        note, 
+        assetID,suggestedParams)
+    return algosdk.encodeUnsignedTransaction( txn )
 }
 module.exports = ({blockchain}) => {
     let {token, server, port, indexerServer, indexerPort, apikey} = blockchain
@@ -176,6 +203,7 @@ module.exports = ({blockchain}) => {
         getCurrentBlockNumber: getCurrentBlockNumber(deps),
         getApp: getApp(deps),
         decodeMessagepack: decodeMessagepack(deps),
-        createASA: createASA(deps)
+        createASA: createASA(deps),
+        transferASA: transferASA(deps)
     }
 }

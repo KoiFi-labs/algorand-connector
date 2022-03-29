@@ -11,5 +11,7 @@ module.exports = (deps) => ([
     {"path":"/transaction/fee", "verb":"POST","uoc":deps.createFeeTransactionUOC},
     {"path":"/app/call", "verb":"POST","uoc":deps.appCallUOC},
     {"path":"/account", "verb":"GET","uoc":deps.getAccountUOC},
-    {"path":"/transfer", "verb":"POST","uoc":deps.createAlgoTransferUOC}
+    {"path":"/transfer", "verb":"POST","uoc":deps.createAlgoTransferUOC},
+    {"path":"/asa", "verb":"POST","uoc":deps.createASAUOC},
+    {"path":"/asa/transfer", "verb":"POST","uoc":deps.transferASAUOC}
 ])

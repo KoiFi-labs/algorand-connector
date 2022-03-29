@@ -5,6 +5,7 @@ const combineTransactionsEntity = require('./combineTransactions')
 const commitTransactionEntity = require('./commitTransaction')
 const createAlgoTransferEntity = require('./createAlgoTransfer')
 const createAppEntity = require('./createApp')
+const createASAEntity = require('./createASA')
 const createFeeTransactionEntity = require('./createFeeTransaction')
 const deleteAppEntity = require('./deleteApp')
 const getAccountEntity = require('./getAccount')
@@ -14,6 +15,7 @@ const getTimeErroredTransactionsEntity = require('./getTimeErroredTransactions')
 const getTransactionEntity = require('./getTransaction')
 const notifyTransactionsUpdateEntity = require('./notifyTransactionsUpdate')
 const optinEntity = require('./optin')
+const transferASAEntity = require('./transferASA')
 const updateTransactionsStatusEntity = require('./updateTransactionsStatus')
 
 module.exports = (dependencies) => ({
@@ -24,6 +26,7 @@ module.exports = (dependencies) => ({
 	commitTransaction: commitTransactionEntity(dependencies),
 	createAlgoTransfer: createAlgoTransferEntity(dependencies),
 	createApp: createAppEntity(dependencies),
+	createASA: createASAEntity(dependencies),
 	createFeeTransaction: createFeeTransactionEntity(dependencies),
 	deleteApp: deleteAppEntity(dependencies),
 	getAccount: getAccountEntity(dependencies),
@@ -33,6 +36,7 @@ module.exports = (dependencies) => ({
 	getTransaction: getTransactionEntity(dependencies),
 	notifyTransactionsUpdate: notifyTransactionsUpdateEntity(dependencies),
 	optin: optinEntity(dependencies),
+	transferASA: transferASAEntity(dependencies),
 	updateTransactionsStatus: updateTransactionsStatusEntity(dependencies),
 
 })

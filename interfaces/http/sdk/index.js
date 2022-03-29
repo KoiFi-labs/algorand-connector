@@ -2,7 +2,7 @@ const axios = require('axios')
 const {AlgorandConnectorError} = require('./errors')
 const endpoints = ({url}) => ({
 	createApp: ({approvalCode, clearStateCode, ...params})=>  ({  method: 'post',  url: url+'/app',  headers: { 'Content-Type': 'application/json'  }, data: {approvalCode, clearStateCode, ...params} }),
-	createApp: (data)=>  ({  method: 'post',  url: url+'/asa',  headers: { 'Content-Type': 'application/json'  }, data }),
+	createASA: (data)=>  ({  method: 'post',  url: url+'/asa',  headers: { 'Content-Type': 'application/json'  }, data }),
 	optIn: ({appId, from, ...params})=>  ({  method: 'post',  url: url+'/app/optin',  headers: { 'Content-Type': 'application/json'  }, data: {appId, from, ...params} }),
 	commitTransaction: ({signedTransaction, list, callback})=>  ({  method: 'post',  url: url+'/transaction',  headers: { 'Content-Type': 'application/json'  }, data: Object.assign(list?{list}:{blob:signedTransaction.blob},  {callback}) }),
 	getTransaction: ({id})=>  ({  method: 'get',  url: url+'/transaction?txId='+id,  headers: { 'Content-Type': 'application/json'  } }),
@@ -13,6 +13,7 @@ const endpoints = ({url}) => ({
 	combineTransactions: ({transactions})=>  ({  method: 'put',  url: url+'/transaction', data:{transactions} }),
 	createFeeTransaction: ({payerAddress})=>  ({  method: 'post',  url: url+'/transaction/fee', data:{payerAddress} }),
 	createAlgoTransfer: ({amount, fee, senderAddress, receiverAddress})=>  ({  method: 'post',  url: url+'/transfer', data:{amount, fee, senderAddress, receiverAddress} }),
+	transferASA: data => ({  method: 'post',  url: url+'/asa/transfer',  headers: { 'Content-Type': 'application/json'  }, data }),
 	getApp: ({appId})=>  ({  method: 'get',  url: url+'/app?appId='+appId }),
 })
 function sleep(ms) {
@@ -20,7 +21,7 @@ function sleep(ms) {
 		ms>0?setTimeout(resolve, ms):resolve();
 	});
 } 
-const backoff = [0, 100, 1000, 1500]
+const backoff = [0]
 async function httpRequest(config){
 	let error = null
 	for (let bo = 0; bo < backoff.length; bo++) {
@@ -31,7 +32,7 @@ async function httpRequest(config){
 			error = e
 		}
 	}
-	if(error.response && error.response.data) throw AlgorandConnectorError.fromResponse(error.response.data)
+	if(error.response && error.response.data) throw new AlgorandConnectorError(error.response.data)
 	throw new AlgorandConnectorError(error)
 	
 }
@@ -42,8 +43,8 @@ module.exports = ({algorandConnector}) => ({
 		if(!clearStateCode) throw new AlgorandConnectorError("clearStateCode missing for createAlgorandApp")
 		return await httpRequest(endpoints(algorandConnector).createApp({approvalCode, clearStateCode, numGlobalByteSlices, numGlobalInts, numLocalByteSlices, numLocalInts, parameters, creatorAddress: senderAddress, txnParams}))
 	},
-	createASA: async ({from,total,decimals,assetName,unitName,assetURL,defaultFrozen,freeze,manager,clawback,reserve,suggestedParams, assetMetadataHash}) => {
-			return httpRequest(endpoints(algorandConnector)).createASA({from,total,decimals,assetName,unitName,assetURL, assetMetadataHash,defaultFrozen,freeze,manager,clawback,reserve,suggestedParams})
+	createASA: async ({from,total,decimals,assetName,unitName,assetURL, assetMetadataHash,defaultFrozen,freeze,manager,clawback,reserve,suggestedParams}) => {
+			return httpRequest(endpoints(algorandConnector).createASA({from,total,decimals,assetName,unitName,assetURL,defaultFrozen,freeze,manager,clawback,reserve,suggestedParams,assetMetadataHash}))
 
 	},
 	optInAlgorandApp: async ({appId, from, parameters=[],txnParams}) => {
@@ -102,7 +103,25 @@ module.exports = ({algorandConnector}) => ({
 	getAlgoBalance: async ({address}) => {
 		let account = await httpRequest(endpoints(algorandConnector).getAccount({address}))
 		return account.amount
-	}
-	
-	
+	},
+	getAccount: async ({address}) => {
+		let account = await httpRequest(endpoints(algorandConnector).getAccount({address}))
+		return account
+	},
+	transferASA: async ({from, 
+		recipient, 
+		closeRemainderTo, 
+		revocationTarget,
+		amount, 
+		note, 
+		assetID} ) => {
+		return httpRequest(endpoints(algorandConnector).transferASA({from, 
+			recipient, 
+			closeRemainderTo, 
+			revocationTarget,
+			amount, 
+			note, 
+			assetID}))
+
+}
 })
