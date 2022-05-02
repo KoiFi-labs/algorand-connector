@@ -1,10 +1,10 @@
 stages:
   - build
-  - deploy
+ # - deploy
 
 include:
   - project: 'koibanx/infraestructura/templates-gitlab-ci'
     ref: main
     file:
       - 'api/build_docker.yml'
-      - 'deploy/deploy_develop.yml'
+##      - 'deploy/deploy_develop.yml'
