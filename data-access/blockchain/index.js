@@ -179,11 +179,12 @@ const transferASA = ({algodClient}) => async ({from,
     return algosdk.encodeUnsignedTransaction( txn )
 }
 module.exports = ({blockchain}) => {
-    let {token, server, port, indexerServer, indexerPort, apikey} = blockchain
+    let {token, server, port, indexerServer, indexerPort,indexerToken, apikey} = blockchain
     port = port?port:''
     indexerPort = indexerPort?indexerPort:''
-    let algodClient = new algosdk.Algodv2(token?token:apikey, server, port);
-    let indexer =  new algosdk.Indexer(token?token:apikey, indexerServer, indexerPort);
+    let algodClient = new algosdk.Algodv2(token?{"X-Algo-API-Token":token}:apikey, server, port);
+
+    let indexer =  new algosdk.Indexer(indexerToken?{"X-Algo-API-Token":indexerToken}:apikey, indexerServer, indexerPort);
     (async ()=>{ await algodClient.healthCheck().do();console.log("Connected to algorand node")})()
     const deps = {indexer, algodClient}
     return {

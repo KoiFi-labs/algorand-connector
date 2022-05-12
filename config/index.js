@@ -6,7 +6,8 @@ module.exports = {
         server: process.env["ALGO_SERVER"],
         port: process.env["ALGO_PORT"],
         indexerServer: process.env["INDEXER_SERVER"],
-        indexerPort: process.env["INDEXER_PORT"]
+        indexerPort: process.env["INDEXER_PORT"],
+        indexerToken: process.env["INDEXER_TOKEN"]
     },
     mongoose:{
         uri:process.env['MONGO_URI'] ,host:process.env['MONGO_URL'], port:process.env['MONGO_PORT'], dbname:process.env['MONGO_DB_NAME']

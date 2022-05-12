@@ -24,7 +24,15 @@
 //     default: 500
 // }
 
-const errorMapper = {default: 500}
+const errorMapper = {
+    CommitTransactionError:{
+        CommitTransactionError:{
+            OverspendError: 409,
+            BelowMinBalanceError: 409
+        }
+    },
+    default: 500
+}
 
 exports.present = function(error){
     let errorMapping = errorMapper[error.constructor.name]
